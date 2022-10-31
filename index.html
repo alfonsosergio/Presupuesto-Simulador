@@ -4,12 +4,100 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador Presupuesto</title>
+    <title>Document</title>
+    <link rel="stylesheet" href="/styles.css">
+
 </head>
 <body>
+    <div class="container">
+        <div class="navigation">
+            <ul>
+                <li>
+                    <a href="#">
+                        <span class="icon"><ion-icon name="storefront-outline"></ion-icon></span>
+                        <span class="title">SISTEMA-QA</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="icon"><ion-icon name="home-outline"></ion-icon></span>
+                        <span class="title">Inicio</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="icon"><ion-icon name="people-circle-outline"></ion-icon></span>
+                        <span class="title">PRESUPUESTOS</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="icon"><ion-icon name="cart-outline"></ion-icon></span>
+                        <span class="title">Productos</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="icon"><ion-icon name="settings-outline"></ion-icon></span>
+                        <span class="title">Configuración</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="icon"><ion-icon name="chatbubbles-outline"></ion-icon></span>
+                        <span class="title">Mensajes</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+
+                <!-- main-->
+        <div class="main">
+            <div class="topbar">
+                <!-- search 
+                <div class="search">
+                        <label>
+                            <input type="text" placeholder="Buscador">
+                            <ion-icon name="search-outline"></ion-icon>
+                        </label>
+                </div>-->
+            </div>
+            <!-- order details list -->
+        <div class="details">
+            <div class="recentOrders">
+                <div class= "cardHeader">
+                    <h2>PRESUPUESTOS</h2>
+                    <button type="submit" id="btnAdd" class="change">AGREGAR</button>
+                </div>
+                <table >
+                    <thead>
+                        <tr>
+                            <th>NOMBRE CLIENTE</th>
+                            <th>VENDEDOR</th>
+                            <th>UBICACIÓN</th>
+                            <th>MONTO</th>
+                            <th>FECHA DE INSTALACIÓN</th>
+                            <th>ESTADO</th>
+                        </tr>
+                    </thead>
+                    <tbody id="example" class= "listPre">
+                    </tbody>
+                </table>
+            </div>
     
+        </div>
+
+                
+
+    </div>
+</div>
 
 
-    <script src="/app.js"></script>
+
+
+
+    
+    <script src="/script.js"></script>
 </body>
 </html>
