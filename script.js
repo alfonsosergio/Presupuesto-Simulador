@@ -7,15 +7,15 @@ let aprobado = 100000;
 
 var presupuestos = [
     {
-        name : "Michael Silva",
+        name : "Edgardo Campo",
         vendedor : "Michel Jordan",
         ubicación : "Los Angeles",
-        monto : 123500,
+        monto : 223500,
         fechaInsta : "2010/06/09",
         estado : "APROBADO"
     },
     {
-        name : "Michael Silva",
+        name : "Carlos Campana",
         vendedor : "Michel Jordan",
         ubicación : "Los Angeles",
         monto : 123500,
@@ -104,7 +104,10 @@ document.querySelector("#btnSearch").addEventListener("click", function(){
 document.querySelector("#btnFilter").addEventListener("click", function(){
     let filClien = prompt("Escribir el nombre del cliente que estás buscando");
     let filClient = presupuestos.filter( elemento => elemento.name === filClien);
-    alert(JSON.stringify(filClient));
+    for(element in filClient){
+        alert(JSON.stringify(filClient[element]));
+    };
+    
 })
 
 
