@@ -1,5 +1,8 @@
 const lista = document.getElementById("example");
 
+
+
+
 /* Simulamos con esta variables que no tenemos un presupuesto para un cliente y el monto necesario para aprobar el presupuesto
 let presupuesto = false;*/
 let aprobado = 100000;
@@ -32,18 +35,27 @@ var presupuestos = [
     }
 ];
 
+const guardarLocalStorage = () => {
+    const presupuestosJSON = JSON.stringify(presupuestos);
+    localStorage.setItem("presupuestos", presupuestosJSON);
+};
+
+if (localStorage.getItem("presupuestos") === null) {
+    guardarLocalStorage();
+}
 
 function mostrarPresupuestos() {
+    const localPresupuestos = JSON.parse(localStorage.getItem("presupuestos"));
     var template = ``;
-    for(element in presupuestos){
+    for(element in localPresupuestos){
         template +=`
                 <tr>
-                <td>${presupuestos[element].name}</td>
-                <td>${presupuestos[element].vendedor}</td>
-                <td>${presupuestos[element].ubicación}</td>
-                <td>${presupuestos[element].monto}</td>
-                <td>${presupuestos[element].fechaInsta}</td>
-                <td>${presupuestos[element].estado}</td>
+                <td>${localPresupuestos[element].name}</td>
+                <td>${localPresupuestos[element].vendedor}</td>
+                <td>${localPresupuestos[element].ubicación}</td>
+                <td>${localPresupuestos[element].monto}</td>
+                <td>${localPresupuestos[element].fechaInsta}</td>
+                <td>${localPresupuestos[element].estado}</td>
             </tr>
         `;
         
@@ -52,32 +64,30 @@ function mostrarPresupuestos() {
     return;
 }
 
+mostrarPresupuestos()
 
-
-/* Al cumplirse la condición vamos a confirmar que queremos cargar un presupuesto*/
+/* Botón para cargar usuario nuevo a la lista de presupuestos*/
 document.querySelector("#btnAdd").addEventListener("click", function(){
-        presupuesto = prompt("Escribir 'SI' para crear presupuesto" ).toUpperCase();
         
-        /* En esta sección cargamos los datos del presupuesto, si la opción que se carga no es la correcta se lanza una alerta. */
-        if (presupuesto === "SI") {
-            cliente = prompt("Pasar nombre del cliente.");
-            alert("El monto del presupuesto debe alcanzar los 100000 pesos");
-            let ubicacionIns = prompt("Ciudad de la instalación");
-            let vendedorIns = prompt("Vendedor a cargo de la venta");
-            let precioAntenaAp = parseInt(prompt("Pasar precio de la antena AP"));
-            let precioAntenaCpe = parseInt(prompt("Pasar precio de la antena CPE"));
-            let precioTransporte = parseInt(prompt("Pasar precio Transporte"));
-            let precioGeneral = parseInt(prompt("Pasar precio de insumos varios"));
-    
-            let total = precioAntenaAp + precioAntenaCpe + precioGeneral + precioTransporte;
+        
+        /* En esta sección cargamos los datos del presupuesto en un modal que se despliega en la página, si la opción que se carga no es la correcta se lanza una alerta. */
+            const cliente = document.getElementById("nomCli").value;
+            const vendedorIns = document.getElementById("vendedor").value;
+            const ubicacionIns = document.getElementById("ubicacion").value;
+            const precioAntena = parseInt(document.getElementById("total").value);
+            const fechaIn = document.getElementById("fecha").value;
+            const precioTransporte = parseInt(document.getElementById("precioTransporte").value);
+            let total = precioAntena + precioTransporte;
     
             /* Con este condicional vamos a aprobar el presupuesto en caso contrario vamos a tener que completar todo el formulario otra vez. */
             if (total < aprobado ) {
-                alert("Presupuesto DESAPROBADO");
-                presupuesto = false;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Presupuesto DESAPROBADO',
+                })
             } else {
-                alert("Presupuesto APROBAD");
-                presupuestos.push({
+                const localPresupuestos = JSON.parse(localStorage.getItem("presupuestos"));
+                localPresupuestos.push({
                     name : cliente,
                     vendedor : vendedorIns,
                     ubicación : ubicacionIns,
@@ -85,31 +95,121 @@ document.querySelector("#btnAdd").addEventListener("click", function(){
                     fechaInsta : "2010/06/09",
                     estado : "APROBADO"
                 });
+                const presupuestosJSON = JSON.stringify(localPresupuestos);
+                localStorage.setItem("presupuestos", presupuestosJSON);
+                Swal.fire(
+                    'Good job!',
+                    'Cliente agregado',
+                    'success'
+                )
                 mostrarPresupuestos();
             }
-        } else {
-            presupuesto = false;
-            alert("PARA CONTINUAR CON EL PROCESO DEBE CONTESTAR CON UN 'SI'");
-        }
-    
 })
 
-
+/* Botón para buscar un cliente de forma individual, el resultado es una leyenda con el monto total del presupuesto.*/
 document.querySelector("#btnSearch").addEventListener("click", function(){
-    let busClien = prompt("Escribir el nombre del cliente que estás buscando");
-    let busquedaClient = presupuestos.find( elemento => elemento.name === busClien);
-    alert(Object.values(busquedaClient));
+        Swal.fire({
+        title: 'NOMBRE DEL CLIENTE A BUSCAR',
+        input: 'text',
+        inputLabel: 'NOMBRE CLIENTE',
+        inputPlaceholder: 'NOMBRE CLIENTE'
+        }).then((result) => {
+        if (result.value) {
+            const localPresupuestos = JSON.parse(localStorage.getItem("presupuestos"));
+            let busquedaClient = localPresupuestos.find( elemento => elemento.name === result.value);
+            if (busquedaClient) {
+                Swal.fire(  `CLIENTE: ${busquedaClient.name}`,
+                        `MONTO: ${busquedaClient.monto}`
+                        );
+            } else {
+                    Swal.fire(  `NO EXISTE EL CLIENTE`);
+            }
+            
+        }
+        })
 })
 
+/* Botón para filtrar clientes por la persona que vendió la instalación.*/
 document.querySelector("#btnFilter").addEventListener("click", function(){
-    let filClien = prompt("Escribir el nombre del cliente que estás buscando");
-    let filClient = presupuestos.filter( elemento => elemento.name === filClien);
-    for(element in filClient){
-        alert(JSON.stringify(filClient[element]));
-    };
+    Swal.fire({
+        title: 'BUSCAR CLIENTES POR VENDEDOR',
+        input: 'text',
+        inputLabel: 'NOMBRE VENDEDOR',
+        inputPlaceholder: 'NOMBRE VENDEDOR'
+        }).then((result) => {
+        if (result.value) {
+            const localPresupuestos = JSON.parse(localStorage.getItem("presupuestos"));
+            let filClient = localPresupuestos.filter( elemento => elemento.vendedor === result.value);
+            if (filClient.length != 0) {
+                var template = ``;
+                for(element in filClient){
+                    template +=`
+                            <tr>
+                            <td>${filClient[element].name}</td>
+                            <td>${filClient[element].vendedor}</td>
+                            <td>${filClient[element].ubicación}</td>
+                            <td>${filClient[element].monto}</td>
+                            <td>${filClient[element].fechaInsta}</td>
+                            <td>${filClient[element].estado}</td>
+                        </tr>
+                    `;  
+            };
+            lista.innerHTML = template;
+            
+            } else {
+                Swal.fire( `NO EXISTE EL VENDEDOR`);
+                mostrarPresupuestos();
+            }
+            
+        }
+        })
     
+})  
+
+/* Botón para cargar todos los clientes en la lista*/
+document.querySelector("#pagePresupuesto").addEventListener("click", function(){
+    mostrarPresupuestos();
 })
 
-
-
-mostrarPresupuestos()
+/* Botón para eliminar clientes de un vendedor*/
+document.querySelector("#removeClient").addEventListener("click", function(){
+    Swal.fire({
+        title: 'ELIMINAR CLIENTE POR VENDEDOR',
+        input: 'text',
+        inputLabel: 'NOMBRE VENDEDOR',
+        inputPlaceholder: 'NOMBRE VENDEDOR'
+        }).then((result) => {
+        if (result.value) {
+            const localPresupuestos = JSON.parse(localStorage.getItem("presupuestos"));
+            let filClient = localPresupuestos.filter( elemento => elemento.vendedor != result.value);
+            Swal.fire(
+                'Good job!',
+                'Cliente ELIMINADO',
+                'success'
+            )
+            if (filClient.length.length < localPresupuestos.length) {
+                var template = ``;
+                for(element in filClient){
+                    template +=`
+                            <tr>
+                            <td>${filClient[element].name}</td>
+                            <td>${filClient[element].vendedor}</td>
+                            <td>${filClient[element].ubicación}</td>
+                            <td>${filClient[element].monto}</td>
+                            <td>${filClient[element].fechaInsta}</td>
+                            <td>${filClient[element].estado}</td>
+                        </tr>
+                    `;  
+                    const presupuestosJSON = JSON.stringify(filClient);
+                    localStorage.setItem("presupuestos", presupuestosJSON);
+            };
+            lista.innerHTML = template;
+            } else {
+                Swal.fire( `NO EXISTE EL CLIENTE`);
+                mostrarPresupuestos();
+            }
+            
+        }
+        })
+    
+})  
