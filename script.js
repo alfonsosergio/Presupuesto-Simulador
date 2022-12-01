@@ -187,7 +187,7 @@ document.querySelector("#removeClient").addEventListener("click", function(){
                 'Cliente ELIMINADO',
                 'success'
             )
-            if (filClient.length.length < localPresupuestos.length) {
+            if (filClient.length < localPresupuestos.length) {
                 var template = ``;
                 for(element in filClient){
                     template +=`
