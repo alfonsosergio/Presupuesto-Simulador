@@ -6,24 +6,30 @@ let presupuesto = false;*/
 let aprobado = 100000;
 
 
+const getPresupuestos = async () =>{
+    try {
+        let response = await fetch('https://jsonplaceholder.typicode.com/users');
+        let data = await response.json();
+        let getLista = data.results;
+        const presupuestos = [];
+        getLista.forEach(element => {
+            presupuestos.push({
+                        name : element.name,
+                        vendedor : element.company.name,
+                        ubicación : element.address.city,
+                        monto : "130000",
+                        fechaInsta : "2010/06/09",
+                        estado : "APROBADO"
+                    });
+        });
+        const presupuestosJSON = JSON.stringify(presupuestos);
+        localStorage.setItem("presupuestos", presupuestosJSON);
+        } catch (error) {
+            Swal.fire(  `NO SE PUEDE CONECTAR A LA BASE DE DATOS`);
+        }
+    
+}
 
-fetch('https://jsonplaceholder.typicode.com/users')
-  .then((response) => response.json())
-  .then((json) => {
-    const presupuestos = [];
-    json.forEach(element => {
-        presupuestos.push({
-                    name : element.name,
-                    vendedor : element.company.name,
-                    ubicación : element.address.city,
-                    monto : "130000",
-                    fechaInsta : "2010/06/09",
-                    estado : "APROBADO"
-                });
-    });
-    const presupuestosJSON = JSON.stringify(presupuestos);
-    localStorage.setItem("presupuestos", presupuestosJSON);
-});
 
 function mostrarPresupuestos() {
     const localPresupuestos = JSON.parse(localStorage.getItem("presupuestos"));
@@ -136,7 +142,6 @@ document.querySelector("#btnFilter").addEventListener("click", function(){
                     `;  
             };
             lista.innerHTML = template;
-            
             } else {
                 Swal.fire( `NO EXISTE EL VENDEDOR`);
                 mostrarPresupuestos();
