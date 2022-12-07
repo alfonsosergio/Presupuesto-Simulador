@@ -1,48 +1,29 @@
 const lista = document.getElementById("example");
 
 
-
-
 /* Simulamos con esta variables que no tenemos un presupuesto para un cliente y el monto necesario para aprobar el presupuesto
 let presupuesto = false;*/
 let aprobado = 100000;
 
 
-var presupuestos = [
-    {
-        name : "Edgardo Campo",
-        vendedor : "Michel Jordan",
-        ubicación : "Los Angeles",
-        monto : 223500,
-        fechaInsta : "2010/06/09",
-        estado : "APROBADO"
-    },
-    {
-        name : "Carlos Campana",
-        vendedor : "Michel Jordan",
-        ubicación : "Los Angeles",
-        monto : 123500,
-        fechaInsta : "2010/06/09",
-        estado : "APROBADO"
-    },
-    {
-        name : "Michael Silva",
-        vendedor : "Michel Jordan",
-        ubicación : "Los Angeles",
-        monto : 123500,
-        fechaInsta : "2010/06/09",
-        estado : "APROBADO"
-    }
-];
 
-const guardarLocalStorage = () => {
+fetch('https://jsonplaceholder.typicode.com/users')
+  .then((response) => response.json())
+  .then((json) => {
+    const presupuestos = [];
+    json.forEach(element => {
+        presupuestos.push({
+                    name : element.name,
+                    vendedor : element.company.name,
+                    ubicación : element.address.city,
+                    monto : "130000",
+                    fechaInsta : "2010/06/09",
+                    estado : "APROBADO"
+                });
+    });
     const presupuestosJSON = JSON.stringify(presupuestos);
     localStorage.setItem("presupuestos", presupuestosJSON);
-};
-
-if (localStorage.getItem("presupuestos") === null) {
-    guardarLocalStorage();
-}
+});
 
 function mostrarPresupuestos() {
     const localPresupuestos = JSON.parse(localStorage.getItem("presupuestos"));
@@ -213,3 +194,34 @@ document.querySelector("#removeClient").addEventListener("click", function(){
         })
     
 })  
+
+/*
+let container = document.getElementById("container");
+
+const getCharacters = async () => {
+  try {
+    let response = await fetch("https://rickandmortyapi.com/api/character");
+    let data = await response.json();
+    let characters = data.results;
+
+    characters.forEach((character) => {
+      const div = document.createElement("div");
+      div.innerHTML = `
+        <h1>${character.name}</h1>
+        <p>${character.status}</p>
+        <p>${character.gender}</p>
+        <img src="${character.image}">
+        <hr/>
+      `;
+      container.append(div);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+getCharacters();
+
+<div id="container"></div>
+
+*/
