@@ -1,4 +1,5 @@
 const lista = document.getElementById("example");
+const main = document.getElementById("main");
 
 
 /* Simulamos con esta variables que no tenemos un presupuesto para un cliente y el monto necesario para aprobar el presupuesto
@@ -10,9 +11,8 @@ const getPresupuestos = async () =>{
     try {
         let response = await fetch('https://jsonplaceholder.typicode.com/users');
         let data = await response.json();
-        let getLista = data.results;
         const presupuestos = [];
-        getLista.forEach(element => {
+        data.forEach(element => {
             presupuestos.push({
                         name : element.name,
                         vendedor : element.company.name,
@@ -33,7 +33,12 @@ const getPresupuestos = async () =>{
 
 function mostrarPresupuestos() {
     const localPresupuestos = JSON.parse(localStorage.getItem("presupuestos"));
-    var template = ``;
+    if (!localPresupuestos) {
+        getPresupuestos()
+        const localPresupuestos = JSON.parse(localStorage.getItem("presupuestos"));
+        return localPresupuestos
+    } else {
+        var template = ``;
     for(element in localPresupuestos){
         template +=`
                 <tr>
@@ -49,6 +54,8 @@ function mostrarPresupuestos() {
     };
     lista.innerHTML = template;
     return;
+    }
+    
 }
 
 mostrarPresupuestos()
@@ -198,7 +205,65 @@ document.querySelector("#removeClient").addEventListener("click", function(){
         }
         })
     
-})  
+}) 
+document.querySelector("#sectionAd").addEventListener("click", function(){
+    var template = `
+    <main>
+        <div class="main2-grid">
+            <a href="#" class="grid-item">
+                <i class="bi bi-inboxes"></i>
+                <p>Mis pedidos</p>
+            </a>
+            <a href="#" class="grid-item">
+                <i class="bi bi-cloud-upload"></i>
+                <p>Agregar un producto</p>
+            </a>
+            <a href="#" class="grid-item">
+                <i class="bi bi-archive"></i>
+                <p>Mis productos</p>
+            </a>
+            <a href="#" class="grid-item">
+                <i class="bi bi-ui-checks"></i>
+                <p>Categorías</p>
+            </a>
+            <a href="#" class="grid-item">
+                <i class="bi bi-ticket-perforated"></i>
+                <p>Cupones</p>
+            </a>
+            <a href="#" class="grid-item">
+                <i class="bi bi-credit-card-2-back"></i>
+                <p>Métodos de pago</p>
+            </a>
+            <a href="#" class="grid-item">
+                <i class="bi bi-truck"></i>
+                <p>Métodos de envío</p>
+            </a>
+            <a href="#" class="grid-item">
+                <i class="bi bi-images"></i>
+                <p>Carrusel de imágenes</p>
+            </a>
+            <a href="#" class="grid-item">
+                <i class="bi bi-gear"></i>
+                <p>Configuración</p>
+            </a>
+            <a href="#" class="grid-item">
+                <i class="bi bi-palette"></i>
+                <p>Personalizar</p>
+            </a>
+            <a href="#" class="grid-item">
+                <i class="bi bi-people"></i>
+                <p>Gestión de empleados</p>
+            </a>
+            <a href="#" class="grid-item">
+                <i class="bi bi-emoji-heart-eyes"></i>
+                <p>Ver mi sitio</p>
+            </a>
+        </div>
+    </main>
+    `;
+    main.innerHTML = template;
+    console.log(template);
+}) 
 
 /*
 let container = document.getElementById("container");
